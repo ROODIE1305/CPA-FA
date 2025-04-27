@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom'; // needed for routing
+import App from './App'; // your real App
 import { testBackendConnection } from './api';
 
-const App = () => {
+// Separate small connection test (optional but clean)
+const ConnectionTester = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -16,12 +19,15 @@ const App = () => {
     fetchData();
   }, []);
 
-  return (
-    <React.StrictMode>
-      <h1>Hello CPA-FA Frontend!</h1>
-    </React.StrictMode>
-  );
+  return null; // we don't want to render anything here
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+root.render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <ConnectionTester />
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>
+);

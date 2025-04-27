@@ -1,37 +1,37 @@
-// frontend/src/auth.js
-
 import { createClient } from '@supabase/supabase-js';
 
-// Initialize Supabase client with your Supabase credentials
-const supabase = createClient(
-  process.env.REACT_APP_SUPABASE_URL,
-  process.env.REACT_APP_SUPABASE_KEY
-);
+// Initialize Supabase Client
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
-export const loginUser = async (email, password) => {
-  const { user, error } = await supabase.auth.signIn({
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// Sign Up function
+export async function signUp(email, password) {
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
   });
+  return { data, error };
+}
 
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return user;
-};
-
-export const signupUser = async (email, password) => {
-  const { user, error } = await supabase.auth.signUp({
+// Login function
+export async function signIn(email, password) {
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
+  return { data, error };
+}
 
-  if (error) {
-    throw new Error(error.message);
-  }
-
+// Get Current Logged-in User
+export async function getUser() {
+  const { data: { user } } = await supabase.auth.getUser();
   return user;
-};
+}
 
-export default supabase;
+// Logout
+export async function signOut() {
+  const { error } = await supabase.auth.signOut();
+  return { error };
+}
